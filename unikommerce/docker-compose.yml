@@ -1,0 +1,31 @@
+version: "3"
+services:
+  mongo:
+    image: mongo:5
+    container_name: mongo-unikommerce
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: unikommerce
+    ports:
+      - 27030:27017
+    volumes:
+      - ~/unikommerceData/mongo:/data/db
+    networks:
+      - unikommerce
+  node:
+    build: .
+    container_name: node-unikommerce
+    restart: always
+    ports:
+      - 3030:3000
+    depends_on:
+      - mongo
+    networks:
+      - unikommerce
+    volumes:
+      - ./:/usr/src/app
+      - exclude:/usr/src/app/node_modules/
+volumes:
+  exclude:
+networks:
+  unikommerce:
